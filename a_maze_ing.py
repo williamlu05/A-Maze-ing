@@ -1,6 +1,7 @@
 import sys
 
 from app import ConfigError, parse_configuration
+from app import output, OutputError
 from mazegen import MazeGenerator, MazeGenerationError
 
 
@@ -26,6 +27,11 @@ if __name__ == "__main__":
         )
         maze.generate()
         maze.print_maze()
+
+        output(maze, config)
     except MazeGenerationError as e:
         print(f"Error creating the maze: {e}", file=sys.stderr)
+        sys.exit(1)
+    except OutputError as e:
+        print(f"Error writing the maze to the output file: {e}")
         sys.exit(1)
