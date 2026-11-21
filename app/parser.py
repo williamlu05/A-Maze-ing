@@ -89,8 +89,8 @@ def parse_configuration(file_path: str) -> Configuration:
     return Configuration(
         int(get_parameter(parameters, "WIDTH")),
         int(get_parameter(parameters, "HEIGHT")),
-        (int(entry_x), int(entry_y)),
-        (int(exit_x), int(exit_y)),
+        (int(entry_y), int(entry_x)),
+        (int(exit_y), int(exit_x)),
         get_parameter(parameters, "OUTPUT_FILE"),
         get_parameter(parameters, "PERFECT") == "TRUE",
     )
