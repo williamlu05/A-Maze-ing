@@ -61,6 +61,7 @@ class MazeGenerator():
             print()
 
     def get_maze(self) -> list[list[int]]:
+        # Habria que crear una copia en verdad
         return self._maze
 
     # TODO block 42 cells if the maze is big enough. Check after validating width and height
