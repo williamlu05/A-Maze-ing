@@ -1,6 +1,7 @@
 import sys
 
-from app.parser import ConfigError, parse_configuration
+from app import ConfigError, parse_configuration
+from mazegen import MazeGenerator, MazeGenerationError
 
 
 if __name__ == "__main__":
@@ -10,8 +11,21 @@ if __name__ == "__main__":
 
     try:
         config = parse_configuration(sys.argv[1])
-        maze = MazeGenerator(config)
     except (OSError, ValueError, KeyError, ConfigError) as e:
         print(f"Error reading the configurations of the maze: {e}",
               file=sys.stderr)
+        sys.exit(1)
+
+    try:
+        maze = MazeGenerator(
+            config.get_width(),
+            config.get_height(),
+            config.get_entry(),
+            config.get_exit(),
+            config.get_perfect()
+        )
+        maze.generate()
+        maze.print_maze()
+    except MazeGenerationError as e:
+        print(f"Error creating the maze: {e}", file=sys.stderr)
         sys.exit(1)
