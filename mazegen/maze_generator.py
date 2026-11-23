@@ -1,10 +1,6 @@
 import random
-from .maze_helper import define_42cells
-
-
-class MazeGenerationError(Exception):
-    def __init__(self, message: str) -> None:
-        super().__init__(message)
+from .maze_helper import DIRECTIONS, MazeGenerationError
+from .maze_helper import check_boundaries, define_42cells
 
 
 def validate_dim(dim: int) -> int:
@@ -62,8 +58,15 @@ class MazeGenerator():
 
     def get_maze(self) -> list[list[int]]:
         # Habria que crear una copia en verdad
+        # Considerar meter el generate() dentro de la iniicialización, get_maze da fallo si no se ha generado antes
         return self._maze
 
-    # TODO block 42 cells if the maze is big enough. Check after validating width and height
-    # TODO Initialize a grix[x][y] all to 1111, all walls before the algorithm.
-    # TODO Have the output of the maze, outside this class
+    def open_wall(self, direction: str, x: int, y: int) -> None:
+        if direction not in DIRECTIONS:
+            raise MazeGenerationError("Invalid direction to open a wall")
+
+        wall = DIRECTIONS[direction]
+        check_boundaries(self._maze, x, y, wall.dx, wall.dy, self._42cells)
+
+        self._maze[x][y] &= ~wall.current
+        self._maze[x + wall.dx][y + wall.dy] &= ~wall.adjacent
