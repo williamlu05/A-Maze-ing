@@ -43,6 +43,7 @@ DIRECTIONS: dict[str, Wall] = {
 
 def check_boundaries(maze: list[list[int]], x: int, y: int,
                      dx: int, dy: int, cells42: set[tuple[int, int]]) -> None:
+    # Tambien comprobar (x, y)
     if not 0 <= (x + dx) < len(maze) or not 0 <= (y + dy) < len(maze[0]):
         raise MazeGenerationError(f"Wall opened at maze boundary: ({x}, {y})")
     if (x,y) in cells42 or (x + dx, y + dy) in cells42:
