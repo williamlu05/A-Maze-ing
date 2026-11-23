@@ -47,7 +47,12 @@ MANDATORY_KEYS: set[str] = {
     "ENTRY",
     "EXIT",
     "OUTPUT_FILE",
-    "PERFECT",
+    "PERFECT"
+}
+
+OPTIONAL_KEYS: set[str] = {
+    "SEED",
+    "ALGORITHM"
 }
 
 
@@ -68,7 +73,7 @@ def parse_configuration(file_path: str) -> Configuration:
             key, value = line.split("=", 1)
             key = key.strip().upper()
 
-            if key not in MANDATORY_KEYS:
+            if key not in MANDATORY_KEYS or OPTIONAL_KEYS:
                 raise ConfigError("Invalid parameter "
                                   f"'{key}' in configuration file")
             if key in parameters:
@@ -89,8 +94,8 @@ def parse_configuration(file_path: str) -> Configuration:
     return Configuration(
         int(get_parameter(parameters, "WIDTH")),
         int(get_parameter(parameters, "HEIGHT")),
-        (int(entry_y), int(entry_x)),
-        (int(exit_y), int(exit_x)),
+        (int(entry_x), int(entry_y)),
+        (int(exit_x), int(exit_y)),
         get_parameter(parameters, "OUTPUT_FILE"),
         get_parameter(parameters, "PERFECT") == "TRUE",
     )
