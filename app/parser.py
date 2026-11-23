@@ -47,7 +47,7 @@ MANDATORY_KEYS: set[str] = {
     "ENTRY",
     "EXIT",
     "OUTPUT_FILE",
-    "PERFECT"
+    "PERFECT",
 }
 
 OPTIONAL_KEYS: set[str] = {
@@ -73,7 +73,7 @@ def parse_configuration(file_path: str) -> Configuration:
             key, value = line.split("=", 1)
             key = key.strip().upper()
 
-            if key not in MANDATORY_KEYS or OPTIONAL_KEYS:
+            if key not in MANDATORY_KEYS | OPTIONAL_KEYS:
                 raise ConfigError("Invalid parameter "
                                   f"'{key}' in configuration file")
             if key in parameters:

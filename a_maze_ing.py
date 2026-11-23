@@ -3,6 +3,7 @@ import sys
 from app import ConfigError, parse_configuration
 from app import output, OutputError
 from mazegen import MazeGenerator, MazeGenerationError
+from display import render
 
 
 if __name__ == "__main__":
@@ -26,6 +27,7 @@ if __name__ == "__main__":
             config.get_perfect()
         )
         maze.generate()
+        print(render(maze))
         output(maze, config)
     except MazeGenerationError as e:
         print(f"Error creating the maze: {e}", file=sys.stderr)
