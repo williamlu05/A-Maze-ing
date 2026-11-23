@@ -26,6 +26,21 @@ if __name__ == "__main__":
             config.get_perfect()
         )
         maze.generate()
+
+        maze.open_wall("N", 1, 0)
+        maze.open_wall("E", 10, 8)
+        maze.open_wall("W", 10, 8)
+        try:
+            maze.open_wall("S", len(maze.get_maze()), 0)
+        except Exception as e:
+            print(f"haha, {e}")
+        try:
+            maze.open_wall("O", 10, 10)
+        except Exception as e:
+            print(f"haha, {e}")
+        maze.open_wall("S", 4, 5)
+        maze.open_wall("N", 5, 5)
+
         maze.print_maze()
 
         output(maze, config)
