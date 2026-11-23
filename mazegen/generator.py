@@ -12,7 +12,7 @@ def validate_dim(dim: int) -> int:
 
 def validate_pos(pos: tuple[int, int], cells42: set[tuple[int, int]],
                  height: int, width: int) -> tuple[int, int]:
-    if not (0 <= pos[0] < height and 0 <= pos[1] < width):
+    if not (0 <= pos[0] < width and 0 <= pos[1] < height):
         raise MazeGenerationError("Invalid position exceeding limits")
     if pos in cells42:
         raise MazeGenerationError("invalid position, "
