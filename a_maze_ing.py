@@ -68,7 +68,7 @@ if __name__ == "__main__":
             match choice:
                 case "1":
                     pending_action("Regenerating maze")
-                    new_maze = create_new_maze(new_seed=True)
+                    new_maze = create_new_maze(config, new_seed=True)
                 case "2":
                     show_sol = not show_sol
                     pending_action(f"{"Show" if show_sol else "Hid"}"

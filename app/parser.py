@@ -62,6 +62,8 @@ OPTIONAL_KEYS: set[str] = {
 
 
 def get_parameter(parameters: dict[str, str], key: str) -> str:
+    if key in OPTIONAL_KEYS and key not in parameters:
+        return None
     if key not in parameters:
         raise ConfigError(f"Missing parameter '{key}' in configuration file")
     return parameters[key]
@@ -103,4 +105,5 @@ def parse_configuration(file_path: str) -> Configuration:
         (int(exit_x), int(exit_y)),
         get_parameter(parameters, "OUTPUT_FILE"),
         get_parameter(parameters, "PERFECT") == "TRUE",
+        int(get_parameter(parameters, "SEED"))
     )
