@@ -8,6 +8,7 @@ if TYPE_CHECKING:
 def dfs(g: MazeGenerator) -> Iterator[None]:
     stack = [g.entry]
     seen = [g.entry]
+    is_solved = False
     while stack:
         x, y = stack[-1]
         # mira los vecinos pisables y se queda con los que no hay en seen
@@ -20,6 +21,9 @@ def dfs(g: MazeGenerator) -> Iterator[None]:
         g.open_wall(x, y, dir)
         seen.append((nx, ny))
         stack.append((nx, ny))
+        if g.exit == (nx, ny) and not is_solved:
+            is_solved = True
+            g.solution = stack.copy()
         yield
 
 
