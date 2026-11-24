@@ -33,7 +33,7 @@ class MazeGenerator:
                  entry_pos: tuple[int, int],
                  exit_pos: tuple[int, int],
                  perfect: bool = True,
-                 seed: int = None,
+                 seed: int = random.randint(1, 100),
                  algorithm: str = "dfs"
                  ) -> None:
         self.width = validate_dim(width)
