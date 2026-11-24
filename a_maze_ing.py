@@ -2,9 +2,8 @@ import sys
 
 from app import ConfigError, parse_configuration
 from app import output, OutputError
+from app import render
 from mazegen import MazeGenerator, MazeGenerationError
-from display import render
-
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
