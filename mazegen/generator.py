@@ -1,6 +1,6 @@
 import random
 from collections.abc import Iterator
-from .helper import N, E, S, W, DIRS, LETTER, PATTERN_42, ALGORITHMS
+from .helper import N, E, S, W, DIRS, PATTERN_42, ALGORITHMS
 from .helper import MazeGenerationError
 
 
@@ -33,7 +33,7 @@ class MazeGenerator:
                  entry_pos: tuple[int, int],
                  exit_pos: tuple[int, int],
                  perfect: bool = True,
-                 seed: int = random.randint(1, 100),
+                 seed: int = None,
                  algorithm: str = "dfs"
                  ) -> None:
         self.width = validate_dim(width)

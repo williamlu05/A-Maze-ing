@@ -1,7 +1,6 @@
 N, E, S, W = 1, 2, 4, 8
 # dirección: (dx, dy, dirección opuesta)
 DIRS = {N: (0, -1, S), E: (1, 0, W), S: (0, 1, N), W: (-1, 0, E)}
-LETTER = {N: "N", E: "E", S: "S", W: "W"}
 ALGORITHMS = ["dfs", "bfs"]
 
 PATTERN_42 = (
