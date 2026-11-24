@@ -11,6 +11,8 @@ OPTIONS = [
     "Re-generate a new maze",
     "Show/Hide the shortest path",
     "Rotate the wall colours",
+    "Return to original maze",
+    "Write result in another different output file",
     "Quit"
 ]
 
@@ -21,7 +23,7 @@ def pending_action(message: str) -> None:
     sleep(1)
 
 
-def create_new_maze(config: Configuration, new_seed: bool) -> MazeGenerator:
+def create_new_maze(config: Configuration, new_seed: bool = False) -> MazeGenerator:
     try:
         maze = MazeGenerator(
             config.get_width(),
@@ -55,7 +57,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     try:
-        maze = create_new_maze(config, new_seed=False)
+        maze = create_new_maze(config)
         new_maze = maze
         show_sol = True
         while True:
@@ -74,10 +76,17 @@ if __name__ == "__main__":
                     pending_action(f"{"Show" if show_sol else "Hid"}"
                                    "ing solution path")
                 case "3":
-                    pending_action("Choose colour")
                     colour = input("What colour would you like? ")
+                    pending_action("Choose colour")
                     print()
                 case "4":
+                    pending_action("Returning to original maze")
+                    new_maze = maze
+                case "5":
+                    output_file = input("What is the name of the new output file? ")
+                    pending_action("Writing in another output_file")
+                    output(new_maze, config, output_file)
+                case "6":
                     pending_action("Quitting")
                     sys.exit(0)
                 case _:
