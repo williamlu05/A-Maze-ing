@@ -33,7 +33,7 @@ class MazeGenerator:
                  entry_pos: tuple[int, int],
                  exit_pos: tuple[int, int],
                  perfect: bool = True,
-                 seed: int = 47,
+                 seed: int = None,
                  algorithm: str = "dfs"
                  ) -> None:
         self.width = validate_dim(width)
@@ -43,7 +43,7 @@ class MazeGenerator:
         self.entry = validate_pos(entry_pos, self.blocked, height, width)
         self.exit = validate_pos(exit_pos, self.blocked, height, width)
 
-        self.seed = seed
+        self.seed = seed if seed is not None else random.randrange(2**32)
         self.rng = random.Random(self.seed)
 
         self.perfect = perfect
