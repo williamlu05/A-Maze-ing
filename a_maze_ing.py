@@ -1,9 +1,46 @@
 import sys
+from time import sleep
 
-from app import ConfigError, parse_configuration
+
+from app import ConfigError, Configuration, parse_configuration
 from app import output, OutputError
 from app import render
 from mazegen import MazeGenerator, MazeGenerationError
+
+OPTIONS = [
+    "Re-generate a new maze",
+    "Show/Hide the shortest path",
+    "Rotate the wall colours",
+    "Quit"
+]
+
+
+def pending_action(message: str) -> None:
+    print("\033[H\033[2J\033[3J", end="", flush=True)
+    print(f"\n{message}\n")
+    sleep(1)
+
+
+def create_new_maze(config: Configuration, new_seed: bool) -> MazeGenerator:
+    try:
+        maze = MazeGenerator(
+            config.get_width(),
+            config.get_height(),
+            config.get_entry(),
+            config.get_exit(),
+            config.get_perfect(),
+            config.get_seed() if not new_seed else None
+        )
+        maze.generate()
+        output(maze, config)
+        return maze
+    except MazeGenerationError as e:
+        print(f"Error creating the maze: {e}", file=sys.stderr)
+        sys.exit(1)
+    except (OutputError, OSError) as e:
+        print(f"Error writing the maze to the output file: {e}")
+        sys.exit(1)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -18,19 +55,34 @@ if __name__ == "__main__":
         sys.exit(1)
 
     try:
-        maze = MazeGenerator(
-            config.get_width(),
-            config.get_height(),
-            config.get_entry(),
-            config.get_exit(),
-            config.get_perfect()
-        )
-        maze.generate()
-        print(render(maze))
-        output(maze, config)
-    except MazeGenerationError as e:
-        print(f"Error creating the maze: {e}", file=sys.stderr)
-        sys.exit(1)
-    except OutputError as e:
-        print(f"Error writing the maze to the output file: {e}")
-        sys.exit(1)
+        maze = create_new_maze(config, new_seed=False)
+        new_maze = maze
+        show_sol = True
+        while True:
+            print(render(new_maze, show_sol))
+            print("=== A-Maze-ing ===")
+            for number, option in enumerate(OPTIONS):
+                print(f"{number + 1}. {option}")
+
+            choice = input(f"Choice? (1 - {len(OPTIONS)}): ")
+            match choice:
+                case "1":
+                    pending_action("Regenerating maze")
+                    new_maze = create_new_maze(new_seed=True)
+                case "2":
+                    show_sol = not show_sol
+                    pending_action(f"{"Show" if show_sol else "Hid"}"
+                                   "ing solution path")
+                case "3":
+                    pending_action("Choose colour")
+                    colour = input("What colour would you like? ")
+                    print()
+                case "4":
+                    pending_action("Quitting")
+                    sys.exit(0)
+                case _:
+                    pending_action("Invalid choice, exiting")
+                    sys.exit(0)
+    except (EOFError, KeyboardInterrupt):
+        print("Exiting program")
+        sys.exit(0)
