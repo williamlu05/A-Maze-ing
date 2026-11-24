@@ -34,17 +34,20 @@ def determine_solution(solution: list[tuple[int, int]]) -> str:
 def output(maze: MazeGenerator, config: Configuration,
            output_file: Optional[str] = None) -> None:
     file_path = config.get_output_file() if not output_file else output_file
-    with open(file_path, "w") as file:
-        matrix = maze.get_maze()
-        for line in matrix:
-            for cell in line:
-                file.write(f"{cell:x}")
+    try:
+        with open(file_path, "w") as file:
+            matrix = maze.get_maze()
+            for line in matrix:
+                for cell in line:
+                    file.write(f"{cell:x}")
+                file.write("\n")
             file.write("\n")
-        file.write("\n")
-        entry_pos = config.get_entry()
-        exit_pos = config.get_exit()
+            entry_pos = config.get_entry()
+            exit_pos = config.get_exit()
 
-        file.write(f"{entry_pos[0]},{entry_pos[1]}\t # entry (x, y)\n")
-        file.write(f"{exit_pos[0]},{exit_pos[1]}\t # exit (x, y)\n")
-        solution = determine_solution(maze.get_solution())
-        file.write(f"{solution}")
+            file.write(f"{entry_pos[0]},{entry_pos[1]}\t # entry (x, y)\n")
+            file.write(f"{exit_pos[0]},{exit_pos[1]}\t # exit (x, y)\n")
+            solution = determine_solution(maze.get_solution())
+            file.write(f"{solution}\n")
+    except OSError as e:
+        raise OutputError(f"{e}")

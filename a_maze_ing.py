@@ -41,7 +41,8 @@ def create_new_maze(config: Configuration,
         print(f"Error creating the maze: {e}", file=sys.stderr)
         sys.exit(1)
     except (OutputError, OSError) as e:
-        print(f"Error writing the maze to the output file: {e}")
+        print("Error writing the maze "
+              f"to the output file: {e}", file=sys.stderr)
         sys.exit(1)
 
 
@@ -87,13 +88,17 @@ if __name__ == "__main__":
                     output_file = input("What is the name"
                                         " of the new output file? ")
                     pending_action("Writing in another output_file")
-                    output(new_maze, config, output_file)
+                    try:
+                        output(new_maze, config, output_file)
+                    except OutputError as e:
+                        print("Error writing the maze "
+                              f"to the output file: {e}\n", file=sys.stderr)
+                        sleep(1)
                 case "6":
                     pending_action("Quitting")
                     sys.exit(0)
                 case _:
-                    pending_action("Invalid choice, exiting")
-                    sys.exit(0)
+                    pending_action("Invalid choice")
     except (EOFError, KeyboardInterrupt):
         print("Exiting program")
         sys.exit(0)

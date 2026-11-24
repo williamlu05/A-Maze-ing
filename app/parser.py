@@ -16,7 +16,7 @@ class Configuration:
         exit_pos: tuple[int, int],
         output_file: str,
         perfect: bool,
-        seed: Optional[int] = None,
+        seed: Optional[int],
         algorithm: Optional[str] = None
     ) -> None:
         self._width = width
@@ -105,6 +105,7 @@ def parse_configuration(file_path: str) -> Configuration:
     entry_x, entry_y = get_parameter(parameters, "ENTRY").split(",")
     exit_x, exit_y = get_parameter(parameters, "EXIT").split(",")
 
+    seed = get_parameter(parameters, "SEED")
     return Configuration(
         int(get_parameter(parameters, "WIDTH")),
         int(get_parameter(parameters, "HEIGHT")),
@@ -112,5 +113,5 @@ def parse_configuration(file_path: str) -> Configuration:
         (int(exit_x), int(exit_y)),
         get_parameter(parameters, "OUTPUT_FILE"),
         get_parameter(parameters, "PERFECT") == "TRUE",
-        int(get_parameter(parameters, "SEED"))
+        None if seed == "" else int(seed)
     )
