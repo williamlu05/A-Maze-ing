@@ -5,7 +5,7 @@ from .parser import Configuration
 
 class OutputError(Exception):
     def __init__(self, message: str) -> None:
-        super().__init__()
+        super().__init__(message)
 
 
 def determine_solution(solution: list[tuple[int, int]]) -> str:
