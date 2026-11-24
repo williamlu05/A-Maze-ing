@@ -23,7 +23,8 @@ def pending_action(message: str) -> None:
     sleep(1)
 
 
-def create_new_maze(config: Configuration, new_seed: bool = False) -> MazeGenerator:
+def create_new_maze(config: Configuration,
+                    new_seed: bool = False) -> MazeGenerator:
     try:
         maze = MazeGenerator(
             config.get_width(),
@@ -83,7 +84,8 @@ if __name__ == "__main__":
                     pending_action("Returning to original maze")
                     new_maze = maze
                 case "5":
-                    output_file = input("What is the name of the new output file? ")
+                    output_file = input("What is the name"
+                                        " of the new output file? ")
                     pending_action("Writing in another output_file")
                     output(new_maze, config, output_file)
                 case "6":

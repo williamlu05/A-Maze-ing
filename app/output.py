@@ -31,7 +31,8 @@ def determine_solution(solution: list[tuple[int, int]]) -> str:
     return path
 
 
-def output(maze: MazeGenerator, config: Configuration, output_file: Optional[str] = None) -> None:
+def output(maze: MazeGenerator, config: Configuration,
+           output_file: Optional[str] = None) -> None:
     file_path = config.get_output_file() if not output_file else output_file
     with open(file_path, "w") as file:
         matrix = maze.get_maze()
