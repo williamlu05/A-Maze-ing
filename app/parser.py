@@ -14,6 +14,7 @@ class Configuration:
         exit_pos: tuple[int, int],
         output_file: str,
         perfect: bool,
+        seed: int = None
     ) -> None:
         self._width = width
         self._height = height
@@ -21,6 +22,7 @@ class Configuration:
         self._exit = exit_pos
         self._output_file = output_file
         self._perfect = perfect
+        self._seed = seed
 
     def get_width(self) -> int:
         return self._width
@@ -39,6 +41,9 @@ class Configuration:
 
     def get_perfect(self) -> bool:
         return self._perfect
+
+    def get_seed(self) -> int:
+        return self._seed
 
 
 MANDATORY_KEYS: set[str] = {
