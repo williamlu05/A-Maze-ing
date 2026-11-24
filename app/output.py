@@ -1,6 +1,6 @@
 
 from mazegen import MazeGenerator
-from app import Configuration
+from .parser import Configuration
 
 
 class OutputError(Exception):
