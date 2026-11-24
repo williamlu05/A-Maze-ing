@@ -1,3 +1,5 @@
+from typing import Optional
+
 
 class ConfigError(Exception):
     def __init__(self, message: str) -> None:
@@ -14,7 +16,8 @@ class Configuration:
         exit_pos: tuple[int, int],
         output_file: str,
         perfect: bool,
-        seed: int = None
+        seed: Optional[int] = None,
+        algorithm: Optional[str] = None
     ) -> None:
         self._width = width
         self._height = height
@@ -23,6 +26,7 @@ class Configuration:
         self._output_file = output_file
         self._perfect = perfect
         self._seed = seed
+        self._algorithm = algorithm
 
     def get_width(self) -> int:
         return self._width
@@ -42,8 +46,11 @@ class Configuration:
     def get_perfect(self) -> bool:
         return self._perfect
 
-    def get_seed(self) -> int:
+    def get_seed(self) -> Optional[int]:
         return self._seed
+
+    def get_algorithm(self) -> Optional[str]:
+        return self._algorithm
 
 
 MANDATORY_KEYS: set[str] = {
@@ -63,7 +70,7 @@ OPTIONAL_KEYS: set[str] = {
 
 def get_parameter(parameters: dict[str, str], key: str) -> str:
     if key in OPTIONAL_KEYS and key not in parameters:
-        return None
+        return ""
     if key not in parameters:
         raise ConfigError(f"Missing parameter '{key}' in configuration file")
     return parameters[key]

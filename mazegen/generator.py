@@ -1,4 +1,5 @@
 import random
+from typing import Optional
 from collections.abc import Iterator
 from .helper import N, E, S, W, DIRS, PATTERN_42, ALGORITHMS
 from .helper import MazeGenerationError
@@ -20,7 +21,7 @@ def validate_pos(pos: tuple[int, int], cells42: set[tuple[int, int]],
     return pos
 
 
-def validate_algorithm(algorithm: str) -> str:
+def validate_algorithm(algorithm: Optional[str]) -> str:
     if algorithm not in ALGORITHMS:
         raise MazeGenerationError(f"Invalid algorithm: {algorithm}")
     return algorithm
@@ -32,9 +33,9 @@ class MazeGenerator:
     def __init__(self, width: int, height: int,
                  entry_pos: tuple[int, int],
                  exit_pos: tuple[int, int],
-                 perfect: bool = True,
-                 seed: int = None,
-                 algorithm: str = "dfs"
+                 perfect: bool,
+                 seed: Optional[int] = None,
+                 algorithm: Optional[str] = "dfs"
                  ) -> None:
         self.width = validate_dim(width)
         self.height = validate_dim(height)
