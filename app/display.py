@@ -1,5 +1,5 @@
 import time
-from mazegen.helper import DIRS, LETTER
+from mazegen.helper import DIRS
 from typing import Any
 from mazegen import MazeGenerator
 
@@ -60,11 +60,11 @@ def render(g: MazeGenerator, show_sol: bool = True, choice: int = None) -> str:
         colors["wall"]["color"] = 95
         colors["solution"]["color"] = 93
     elif choice == 4:
-        colors["wall"]["symbol"] = "⬜"
-        colors["p42"]["symbol"] = "🔳"
-        colors["solution"]["symbol"] = "🟩"
-        colors["entry"]["symbol"] = "🟥"
-        colors["exit"]["symbol"] = "🟦"
+        colors["wall"]["color"] = 32
+        colors["p42"]["color"] = 33
+        colors["solution"]["color"] = 33
+        colors["entry"]["symbol"] = "🐝"
+        colors["exit"]["symbol"] = "🌼"
 
     return "\n".join("".join(tile(k, colors) for k in row)
                      for row in build_canvas(g, show_sol))
