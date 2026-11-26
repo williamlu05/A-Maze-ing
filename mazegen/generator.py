@@ -105,11 +105,12 @@ class MazeGenerator:
         }
 
     def generate_steps(self) -> Iterator[None]:
-        from .algorithms import ALG
+        from .algorithms import ALG, find_solution
         yield from ALG[self.algorithm](self)
         if not self.perfect:
             yield from self.braid()
             yield from self.add_loops()
+        self.solution = find_solution(self)
 
     def generate(self) -> None:
         for _ in self.generate_steps():
