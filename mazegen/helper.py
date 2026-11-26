@@ -12,6 +12,15 @@ PATTERN_42 = (
 )
 
 
+PATTERN_43 = (
+    "1.1.111",
+    "1.1...1",
+    "111.111",
+    "..1.-.1",
+    "..1.111",
+)
+
+
 class MazeGenerationError(Exception):
     def __init__(self, message: str) -> None:
         super().__init__(message)
