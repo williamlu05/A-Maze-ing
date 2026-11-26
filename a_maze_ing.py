@@ -1,10 +1,8 @@
 import sys
 from time import sleep
-
-
 from app import ConfigError, Configuration, parse_configuration
 from app import output, OutputError
-from app import render
+from app.display import render, animate_solution
 from mazegen import MazeGenerator, MazeGenerationError
 
 OPTIONS = [
@@ -62,8 +60,10 @@ if __name__ == "__main__":
         maze = create_new_maze(config)
         new_maze = maze
         show_sol = True
+        color_choice:int = None
         while True:
-            print(render(new_maze, show_sol))
+            print(render(new_maze, show_sol, color_choice))
+            # animate_solution(new_maze, COLORS)
             print("=== A-Maze-ing ===")
             for number, option in enumerate(OPTIONS):
                 print(f"{number + 1}. {option}")
@@ -78,8 +78,21 @@ if __name__ == "__main__":
                     pending_action(f"{"Show" if show_sol else "Hid"}"
                                    "ing solution path")
                 case "3":
-                    colour = input("What colour would you like? ")
+                    colour = input("What colour would you like? "
+                                   "\n1- White\n2- Blue\n3- Purple"
+                                   "\n4- Simple Emojis\n")
                     pending_action("Choose colour")
+                    match colour:
+                        case "1":
+                            color_choice = 1
+                        case "2":
+                            color_choice = 2
+                        case "3":
+                            color_choice = 3
+                        case "4":
+                            color_choice = 4
+                        case _:
+                            color_choice = 1
                     print()
                 case "4":
                     pending_action("Returning to original maze")

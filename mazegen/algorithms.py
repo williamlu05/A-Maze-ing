@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import Iterator, TYPE_CHECKING
 import heapq
-import random
 
 if TYPE_CHECKING:
     from .generator import MazeGenerator
