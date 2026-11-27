@@ -15,7 +15,8 @@ def build_canvas(g: MazeGenerator, show_sol: bool) -> list[list[str]]:
             for dir, (dx, dy, _) in DIRS.items():
                 if not g.grid[y][x] & dir:
                     canv[2 * y + 1 + dy][2 * x + 1 + dx] = "floor"
-            draw_sol(canv, g.solution)
+    if show_sol:
+        draw_sol(canv, g.solution)
     canv[2 * g.entry[1] + 1][2 * g.entry[0] + 1] = "entry"
     canv[2 * g.exit[1] + 1][2 * g.exit[0] + 1] = "exit"
     return canv
@@ -38,7 +39,8 @@ def tile(kind: str, colors: dict[str, style]) -> str:
     return f"\033[{s['color']}m{s['symbol']}\033[0m"
 
 
-def render(g: MazeGenerator, show_sol: bool = True, choice: int = None) -> str:
+def render(g: MazeGenerator, show_sol: bool = True, choice: int = None,
+           canvas: list[list[str]] = None) -> str:
     colors: dict[str, Any] = {}
     colors = {
         "wall": {"symbol": "██", "color": 0},
@@ -50,14 +52,14 @@ def render(g: MazeGenerator, show_sol: bool = True, choice: int = None) -> str:
     }
     if choice == 1:
         colors["wall"]["color"] = 0
-        colors["wall"]["color"] = 0
+        # colors["wall"]["color"] = 0
     elif choice == 2:
         colors["wall"]["color"] = 94
-        colors["wall"]["color"] = 94
+        # colors["wall"]["color"] = 94
         colors["solution"]["color"] = 97
     elif choice == 3:
         colors["wall"]["color"] = 95
-        colors["wall"]["color"] = 95
+        # colors["wall"]["color"] = 95
         colors["solution"]["color"] = 93
     elif choice == 4:
         colors["wall"]["color"] = 32
@@ -66,24 +68,23 @@ def render(g: MazeGenerator, show_sol: bool = True, choice: int = None) -> str:
         colors["entry"]["symbol"] = "🐝"
         colors["exit"]["symbol"] = "🌼"
 
+    if canvas is None:
+        canvas = build_canvas(g, show_sol)
     return "\n".join("".join(tile(k, colors) for k in row)
-                     for row in build_canvas(g, show_sol))
+                     for row in canvas)
 
 
-# WIP ANIMACION
-def animate_solution(g, colors):
-    inv = {v: k for k, v in LETTER.items()}
-    canvas = build_canvas(g, None)
-    x, y = g.entry
-    canvas[2 * y + 1][2 * x + 1] = "solution"
-    print("\033[2J", end="")
-
-    from app.output import determine_solution
-    for ch in determine_solution(g.solution):
-        dx, dy, _ = DIRS[inv[ch]]
-        canvas[2 * y + 1 + dy][2 * x + 1 + dx] = "solution"
-        x, y = x + dx, y + dy
-        canvas[2 * y + 1][2 * x + 1] = "solution"
-        print("\033[H" + "\n".join("".join(tile(k, colors) for k in row)
-              for row in canvas), flush=True)
-    time.sleep(0.3)
+# ANIMACION
+def animate_solution(g: MazeGenerator, choice: int = None,
+                     delay: float = 0.03) -> None:
+    canvas = build_canvas(g, False)
+    print("\033[H\033[2J", end="")
+    print("\033[H" + render(g, False, choice, canvas), flush=True)
+    time.sleep(0.5)
+    for (xa, ya), (xb, yb) in zip(g.solution, g.solution[1:]):
+        for cx, cy in ((xa + xb + 1, ya + yb + 1), (2 * xb + 1, 2 * yb + 1)):
+            if canvas[cy][cx] == "floor":
+                canvas[cy][cx] = "solution"
+                print("\033[H" + render(g, False, choice, canvas), flush=True)
+                time.sleep(delay)
+    print("\033[H\033[2J\033[3J", end="", flush=True)

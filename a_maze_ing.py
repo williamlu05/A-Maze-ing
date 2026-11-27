@@ -4,11 +4,16 @@ from app import ConfigError, Configuration, parse_configuration
 from app import output, OutputError
 from app.display import render, animate_solution
 from mazegen import MazeGenerator, MazeGenerationError
+from mazegen.helper import PATTERN_42, PATTERN_43
+
+PATTERNS = {42: PATTERN_42, 43: PATTERN_43}
 
 OPTIONS = [
     "Re-generate a new maze",
     "Show/Hide the shortest path",
-    "Rotate the wall colours",
+    "Animate the shortest path",
+    "Rotate number pattern",
+    "Change the wall colours",
     "Return to original maze",
     "Write result in another different output file",
     "Quit"
@@ -22,7 +27,8 @@ def pending_action(message: str) -> None:
 
 
 def create_new_maze(config: Configuration,
-                    new_seed: bool = False) -> MazeGenerator:
+                    new_seed: bool = False,
+                    pattern: tuple = PATTERN_42) -> MazeGenerator:
     try:
         maze = MazeGenerator(
             config.get_width(),
@@ -30,7 +36,8 @@ def create_new_maze(config: Configuration,
             config.get_entry(),
             config.get_exit(),
             config.get_perfect(),
-            config.get_seed() if not new_seed else None
+            config.get_seed() if not new_seed else None,
+            pattern_num=pattern
         )
         maze.generate()
         output(maze, config)
@@ -60,7 +67,9 @@ if __name__ == "__main__":
         maze = create_new_maze(config)
         new_maze = maze
         show_sol = True
-        color_choice:int = None
+        color_choice: int = None
+        pattern_number = 42
+        animate_solution(new_maze, color_choice)
         while True:
             print(render(new_maze, show_sol, color_choice))
             # animate_solution(new_maze, COLORS)
@@ -72,12 +81,28 @@ if __name__ == "__main__":
             match choice:
                 case "1":
                     pending_action("Regenerating maze")
-                    new_maze = create_new_maze(config, new_seed=True)
+                    new_maze = create_new_maze(config, True,
+                                               PATTERNS[pattern_number])
+                    show_sol = True
+                    animate_solution(new_maze, color_choice)
                 case "2":
                     show_sol = not show_sol
                     pending_action(f"{"Show" if show_sol else "Hid"}"
                                    "ing solution path")
                 case "3":
+                    show_sol = True
+                    animate_solution(new_maze, color_choice)
+                case "4":
+                    if pattern_number == 42:
+                        pattern_number = 43
+                    else:
+                        pattern_number = 42
+                    pending_action("Changing pattern number...")
+                    new_maze = create_new_maze(config, True,
+                                               PATTERNS[pattern_number])
+                    show_sol = True
+                    animate_solution(new_maze, color_choice)
+                case "5":
                     colour = input("What colour would you like? "
                                    "\n1- White\n2- Blue\n3- Purple"
                                    "\n4- Simple Emojis\n")
@@ -94,10 +119,10 @@ if __name__ == "__main__":
                         case _:
                             color_choice = 1
                     print()
-                case "4":
+                case "6":
                     pending_action("Returning to original maze")
                     new_maze = maze
-                case "5":
+                case "7":
                     output_file = input("What is the name"
                                         " of the new output file? ")
                     pending_action("Writing in another output_file")
@@ -107,7 +132,7 @@ if __name__ == "__main__":
                         print("Error writing the maze "
                               f"to the output file: {e}\n", file=sys.stderr)
                         sleep(1)
-                case "6":
+                case "8":
                     pending_action("Quitting")
                     sys.exit(0)
                 case _:

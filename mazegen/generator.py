@@ -1,7 +1,7 @@
 import random
 from typing import Optional
 from collections.abc import Iterator
-from .helper import N, E, S, W, DIRS, PATTERN_42, ALGORITHMS
+from .helper import DIRS, PATTERN_42, ALGORITHMS
 from .helper import MazeGenerationError
 
 
@@ -35,12 +35,13 @@ class MazeGenerator:
                  exit_pos: tuple[int, int],
                  perfect: bool,
                  seed: Optional[int] = None,
-                 algorithm: Optional[str] = "dfs"
+                 algorithm: Optional[str] = "dfs",
+                 pattern_num: tuple = PATTERN_42
                  ) -> None:
         self.width = validate_dim(width)
         self.height = validate_dim(height)
 
-        self.blocked = self.pattern42()
+        self.blocked = self.pattern42(pattern_num)
         self.entry = validate_pos(entry_pos, self.blocked, height, width)
         self.exit = validate_pos(exit_pos, self.blocked, height, width)
 
@@ -90,7 +91,7 @@ class MazeGenerator:
                 out.append((dir, x + dx, y + dy))
         return out
 
-    def pattern42(self) -> set[tuple[int, int]]:
+    def pattern42(self, pattern_type: tuple) -> set[tuple[int, int]]:
         if self.width < 9 or self.height < 7:
             print("Error: the maze is too small, "
                   " '42' pattern could not be drawn.")
@@ -99,7 +100,7 @@ class MazeGenerator:
 
         return {
             (ox + dx, oy + dy)
-            for dy, row in enumerate(PATTERN_42)
+            for dy, row in enumerate(pattern_type)
             for dx, char in enumerate(row)
             if char == "1"
         }
